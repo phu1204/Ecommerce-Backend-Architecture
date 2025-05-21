@@ -1,0 +1,4 @@
+### signup
+@url_dev=http://localhost:3050/v1/api
+
+POST {{url_dev}}/shop/signup
