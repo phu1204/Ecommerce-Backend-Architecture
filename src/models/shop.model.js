@@ -1,6 +1,6 @@
 'use strict'
 
-const mongoose = require('mongoose'); // Erase if already required
+const { mongoose, Schema } = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
 var shopSchema = new mongoose.Schema({
@@ -17,7 +17,7 @@ var shopSchema = new mongoose.Schema({
     },
     password:{
         type:String,
-        required:true,
+        // required:true,
     },
     status:{
         type: String,
@@ -34,7 +34,7 @@ var shopSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true,
-    collation: 'Shops'
+    collection: 'Shops'
 });
 
 //Export the model
