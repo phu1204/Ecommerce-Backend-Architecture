@@ -5,6 +5,7 @@ const keyTokenSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true, unique: true },
     publicKey: { type: String, required: true },
+    privateKey: { type: String, required: true },
     refreshToken: { type: String },
     createdAt: { type: Date, default: Date.now },
   },
