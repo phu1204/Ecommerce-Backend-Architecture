@@ -31,6 +31,7 @@ class AccessService {
             })
 
             if(newShop){
+                // Combine RSA and JWT
                 // created privatekey, created publickey
                 // const {privateKey, publicKey} = crypto.generateKeyPairSync('rsa', {
                 //     modulusLength: 4096,
