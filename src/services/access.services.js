@@ -5,6 +5,7 @@ const crypto = require('crypto')
 const KeyTokenService = require('./keyToken.services')
 const createTokenPair = require('../auth/authUtils')
 const getIntoData = require('../utils')
+const { BadRequestError, ConfilctError } = require('../core/error.response.js')
 
 const RoleShop = {
     SHOP: 'SHOP',
@@ -19,10 +20,7 @@ class AccessService {
             // step1: check if email exist???
             const holderShop = await shopModel.findOne({ email }).lean()
             if(holderShop){
-                return {
-                    code: 'xxxx',
-                    message: 'Shop already registed'
-                }
+                throw new BadRequestError("Email already exists");   
             }
             const passwordHash = await bcrypt.hash(password, 10)
             
@@ -54,12 +52,8 @@ class AccessService {
                     publicKey,
                     privateKey
                 })
-    
-                if(!keyStore) {
-                    return {
-                        code: 'xxx',
-                        message: 'keyStore error'
-                    }
+                if(!keyStore) {                 
+                    throw new BadRequestError("Email already exists");   
                 }
                 // const publicKeyObject = await crypto.createPublicKey( publicKeyString)
                 // console.log(`publicKeyObject::`, publicKeyObject)
@@ -80,7 +74,7 @@ class AccessService {
             
         } catch (error) {
             return {
-                code: 'xxx',
+                code: error.status || 500,
                 message: error.message,
                 status: 'error'
             }
