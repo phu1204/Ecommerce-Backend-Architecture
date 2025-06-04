@@ -5,7 +5,8 @@ const crypto = require('crypto')
 const KeyTokenService = require('./keyToken.services')
 const createTokenPair = require('../auth/authUtils')
 const getIntoData = require('../utils')
-const { BadRequestError, ConfilctError } = require('../core/error.response.js')
+const { BadRequestError, AuthFailureError } = require('../core/error.response.js')
+const findByEmail = require('./shop.services.js')
 
 const RoleShop = {
     SHOP: 'SHOP',
@@ -15,6 +16,46 @@ const RoleShop = {
 }
 
 class AccessService {
+
+    // 1. check email exist ?
+    // 2. check match password
+    // 3. create AT and RT and save
+    // 4. generate toekns
+    // 5. get data return login
+
+    static login = async({ email, password, refreshtoken = null}) => {
+        const foundShop = await findByEmail({ email })
+
+        if(!foundShop){
+            throw new BadRequestError('Shop not registed')
+        }
+
+        const match = bcrypt.compare(password, foundShop.password)
+        if(!match){
+            throw new AuthFailureError('Authentication Error')
+        }
+
+        const publicKey = crypto.randomBytes(64).toString('hex')
+        const privateKey = crypto.randomBytes(64).toString('hex')
+
+        const { _id: userId } = foundShop
+
+        const tokens = await createTokenPair({userId, email}, publicKey, privateKey)
+
+        await KeyTokenService.createKeyToken({
+            userId,
+            refreshToken: tokens.refreshtoken,
+            privateKey,
+            publicKey
+        })
+
+        return {
+                    shop: getIntoData({ fileds: ['_id', 'name', 'email'], object: foundShop}),
+                    tokens
+                }
+
+    }
+
     static signUp = async ({name, email, password}) => {
         try {
             // step1: check if email exist???
@@ -25,7 +66,7 @@ class AccessService {
             const passwordHash = await bcrypt.hash(password, 10)
             
             const newShop = await shopModel.create({
-                name, email, passwordHash, roles: [RoleShop.SHOP]
+                name, email, password: passwordHash, roles: [RoleShop.SHOP]
             })
 
             if(newShop){

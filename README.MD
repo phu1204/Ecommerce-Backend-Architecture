@@ -30,3 +30,5 @@ PURPOSE: HANDLE SUCCESS WHEN HANDLE API
 
 *** Section 9: Login Shop API ***
 - Principle what is written second so create utils
+- FE check cookie for not query db check token
+- In DB, findOneAndUpdate has options: upsert: true, new: true mean is if not yet so create opposite update
