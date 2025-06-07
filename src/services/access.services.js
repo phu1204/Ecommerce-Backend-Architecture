@@ -3,7 +3,7 @@ const shopModel = require('../models/shop.model')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const KeyTokenService = require('./keyToken.services')
-const createTokenPair = require('../auth/authUtils')
+const {createTokenPair} = require('../auth/authUtils')
 const getIntoData = require('../utils')
 const { BadRequestError, AuthFailureError } = require('../core/error.response.js')
 const findByEmail = require('./shop.services.js')
@@ -17,6 +17,17 @@ const RoleShop = {
 
 class AccessService {
 
+    // logout
+    // 1. check userId
+    // 2. get accessToken
+    // 3. verify token
+    // 4. remove 
+
+    static logout = async(keyStore) => {
+        return await KeyTokenService.removeById(keyStore._id)
+    }
+
+    // #login
     // 1. check email exist ?
     // 2. check match password
     // 3. create AT and RT and save

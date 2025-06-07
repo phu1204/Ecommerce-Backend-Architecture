@@ -32,3 +32,7 @@ PURPOSE: HANDLE SUCCESS WHEN HANDLE API
 - Principle what is written second so create utils
 - FE check cookie for not query db check token
 - In DB, findOneAndUpdate has options: upsert: true, new: true mean is if not yet so create opposite update
+
+
+*** Section 10: Logout vs Authentication ***
+- 
