@@ -4,7 +4,8 @@ const findById  = require("../services/apiKey.services")
 
 const HEADER = {
     API_KEY: 'x-api-key',
-    AUTHORIZATION: 'authorization'
+    AUTHORIZATION: 'authorization',
+    REFRESHTOKEN: 'refreshtoken'
 }
 
 const apiKey = async (req, res, next) => {
@@ -24,7 +25,6 @@ const apiKey = async (req, res, next) => {
             })
         }
         req.objKey = objKey
-        console.log(objKey)
         return next()
 
     } catch (error) {
@@ -34,13 +34,11 @@ const apiKey = async (req, res, next) => {
 
 const permission = ( permission ) => {
     return (req, res, next ) => {
-        console.log(req.objKey.permissions)
         if(!req.objKey.permissions){
             return res.status(403).json({
                 message: 'Permission Denieds'
             })
         }
-        console.log(`Permission:`, req.objKey.permissions)
         const validPermission = req.objKey.permissions.includes(permission)
         if(!validPermission){
              return res.status(403).json({

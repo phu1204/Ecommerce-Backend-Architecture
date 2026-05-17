@@ -1,0 +1,8 @@
+### signup
+@url_dev=http://localhost:3050/v1/api
+
+POST {{url_dev}}/shop/handlerRefreshToken
+Content-Type: application/json
+x-api-key: 2f13591f51355d170f6186a96f5da9ce48bfb6b8911fc4520f1d3610eea11c6b89996c5e979c7c310d7c3fb8110f67fc42eb02345bee35f5e9a4d3caebbcb289
+x-client-id: 69c21557b55ec1af0202aa65
+x-rtoken-id: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWMyMTU1N2I1NWVjMWFmMDIwMmFhNjUiLCJlbWFpbCI6InBodTEyMDRAZ21haWwuY29tIiwiaWF0IjoxNzc1NjU2ODI2LCJleHAiOjE3NzYyNjE2MjZ9.wx7u7kFSFlTRjFT4Tt3nj3LIt6FFUFBPnrcUivuupIg

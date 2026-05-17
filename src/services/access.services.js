@@ -3,9 +3,9 @@ const shopModel = require('../models/shop.model')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const KeyTokenService = require('./keyToken.services')
-const {createTokenPair} = require('../auth/authUtils')
+const {createTokenPair, verifyJWT} = require('../auth/authUtils')
 const getIntoData = require('../utils')
-const { BadRequestError, AuthFailureError } = require('../core/error.response.js')
+const { BadRequestError, AuthFailureError, ForbiddenError } = require('../core/error.response.js')
 const findByEmail = require('./shop.services.js')
 
 const RoleShop = {
@@ -17,11 +17,43 @@ const RoleShop = {
 
 class AccessService {
 
-    // logout
-    // 1. check userId
-    // 2. get accessToken
-    // 3. verify token
-    // 4. remove 
+    //check this token used?
+    static handleRefreshToken = async ({ keyStore, user, refreshToken }) => {
+        console.log(keyStore)
+            //check who use this token
+        const { userId, email } = user
+
+        if(keyStore.refreshTokensUsed.includes(refreshToken)){
+            // delete all token
+            await KeyTokenService.deleteKeyById( userId ) 
+            throw new ForbiddenError('Somthing wrong !!! Please ReLogin')
+        }  
+        // IF NO
+        if(keyStore.refreshToken != refreshToken) throw new AuthFailureError('Shop not Registed')
+                    
+        //check userId
+        const foundShop = await findByEmail({ email })
+        if(!foundShop) throw new AuthFailureError('Shop not Registed')
+
+        //create double token
+        const tokens = await createTokenPair({userId, email}, keyStore.publicKey, keyStore.privateKey)
+
+        const holderToken = await KeyTokenService.findRefreshToken({refreshToken})
+        //update token
+        await holderToken.updateOne({
+            $set: {
+                refreshToken: tokens.refreshToken
+            },
+            $addToSet: {
+                refreshTokensUsed: refreshToken // da duoc su sung de lay token moi roi
+            }
+        })
+
+        return {
+            user,
+            tokens
+        }  
+    }
 
     static logout = async(keyStore) => {
         return await KeyTokenService.removeById(keyStore._id)
@@ -55,7 +87,7 @@ class AccessService {
 
         await KeyTokenService.createKeyToken({
             userId,
-            refreshToken: tokens.refreshtoken,
+            refreshToken: tokens.refreshToken,
             privateKey,
             publicKey
         })

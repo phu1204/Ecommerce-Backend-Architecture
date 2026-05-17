@@ -31,6 +31,17 @@ class KeyTokenService{
         return await keyTokenModel.deleteOne(id).lean()
     }
 
+    static findRefreshTokenUsed = async ( {refreshToken} ) => {
+        return await keyTokenModel.findOne({ refreshTokensUsed: refreshToken})
+    }
+
+    static deleteKeyById = async ( userId ) => {
+        return await keyTokenModel.deleteOne({ user: userId }).lean()
+    }
+
+    static findRefreshToken = async ( {refreshToken}) => {
+        return await keyTokenModel.findOne({refreshToken})
+    }
 
 }
 

@@ -35,4 +35,8 @@ PURPOSE: HANDLE SUCCESS WHEN HANDLE API
 
 
 *** Section 10: Logout vs Authentication ***
-- 
+- write 1 authentication in order to check who want to damage my server
+- must check access token, can't logout if haven't AT or RT
+- request FR must have 3 param
+- use Redis save AT and RT
+- remove keyToken when client logout

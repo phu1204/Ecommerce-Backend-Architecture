@@ -3,9 +3,9 @@
 
 POST {{url_dev}}/shop/login
 Content-Type: application/json
-x-api-key: b5e4f0b195e4b0c60f9467eccdd131e208bc5f3ce3420a20e69955cc1891daa91dbe9796afca4ab2e792bad8cbcd174100d7d4b062c395fe29c16e503752fb80
+x-api-key: c22b49ca11545acc45d6ec64c7a35feddb1ef1099911643b9fc546752dae51a755dab49cbe35b8b0740a996fbecef3070c4c52ee10e98514cd7da7a83b365ab7
 
 {
     "email": "phu1204@gmail.com",
-    "password": "123"
+    "password": "12042001"
 }

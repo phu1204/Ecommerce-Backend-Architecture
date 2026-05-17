@@ -1,0 +1,23 @@
+### signup
+@url_dev=http://localhost:3050/v1/api
+
+POST {{url_dev}}/product
+Content-Type: application/json
+x-api-key: c22b49ca11545acc45d6ec64c7a35feddb1ef1099911643b9fc546752dae51a755dab49cbe35b8b0740a996fbecef3070c4c52ee10e98514cd7da7a83b365ab7
+x-client-id: 69c21557b55ec1af0202aa65
+x-rtoken-id: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWMyMTU1N2I1NWVjMWFmMDIwMmFhNjUiLCJlbWFpbCI6InBodTEyMDRAZ21haWwuY29tIiwiaWF0IjoxNzc1NjU2OTc0LCJleHAiOjE3NzYyNjE3NzR9.JwUG14x_a4L8rcYNWYHImNh4hbxtq1kSa4a95rAdm_E
+
+{
+    "product_name": "New Jeans 2",
+    "product_description": "High-quality Clothing",
+    "product_thumb": "product_thumb",
+    "product_price": 4000,
+    "product_quantity": 10,
+    "product_type": "Furniture",
+    "product_shop": "69c21557b55ec1af0202aa65",
+    "product_attributes": {
+        "brand": "Levi",
+        "size": "L",
+        "material": "Denim"
+    }
+}
