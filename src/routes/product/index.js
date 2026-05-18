@@ -13,6 +13,7 @@ router.get('/:product_id', asyncHandler(productController.findProduct))
 
 router.use(authenticationV2)
 
+router.patch('/:product_id', asyncHandler(productController.updateProduct))
 router.post('', asyncHandler(productController.createProduct))
 router.get('/draft/all', asyncHandler(productController.findAllDraft))
 router.get('/published/all', asyncHandler(productController.findAllPublished))

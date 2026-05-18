@@ -21,7 +21,10 @@ const productSchema = new Schema ({
         default: 4.5,
         min: [1,'Must be above 1.0'],
         max: [5,'Must be below 5.0'],
-        set: (val) => Math.round(val * 10)/10
+        set: (val) => {
+        if (val == null) return 4.5
+        return Math.round(val * 10) / 10
+  }
     },
     isDraft: {type: Boolean, default: true, index: true, selected: false},
     isPublished: {type: Boolean, default: false, index: true, selected: false},
