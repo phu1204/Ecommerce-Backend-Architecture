@@ -4,7 +4,8 @@ const { product, clothing, electronic, furniture } = require('../models/product.
 const { BadRequestError, ForbiddenError } = require('../core/error.response')
 const listProductType = require('../configs/product.config')
 const { findAllDraftRepo, publishedProductByShop,searchProductByUser, findAllProducts, findProduct, updateProductById } = require('../models/repositories/product.repo')
-const { updateNestedObjectPaser } = require('../utils')
+const { updateNestedObjectPaser, removeUndefinedObject } = require('../utils')
+const { createInventory } = require('../models/repositories/iventory.repo')
 class ProductFactory {
 
     static productRegistry = {} //key-class
@@ -75,7 +76,16 @@ class Product {
 
     // create new product
     async createProduct( product_id ){
-        return await product.create({...this, _id: product_id})
+        const newProduct = product.create({...this, _id: product_id})
+        if(newProduct){
+            // add product_stock in inventory collection
+            await createInventory({
+                productId: newProduct._id,
+                shopId: this.product_shop,
+                stock: this.product_quantity
+            })
+        }
+        return newProduct
     }
 
     async updateProduct ( product_id, bodyUpdate ){
@@ -95,8 +105,9 @@ class Clothing extends Product {
 
     async updateProduct( product_id ){
         // remove all attr has null or underfined
-        const objectParams = this
-        // update where ? (1 is child, 2 is parent)
+        const objectUpdateNested = updateNestedObjectPaser(this)
+        const objectParams = removeUndefinedObject(objectUpdateNested)
+        // update where ? (1 is child, 2 i  s parent)
         if(objectParams.product_attributes){
             //update child
             await updateProductById({product_id, bodyUpdate: updateNestedObjectPaser(objectParams.product_attributes), model: clothing})

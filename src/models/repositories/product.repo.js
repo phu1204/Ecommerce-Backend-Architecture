@@ -65,8 +65,6 @@ const updateProductById = async({product_id, bodyUpdate, model, isNew = true}) =
     })
 }
 
-
-
 module.exports = {
     findAllDraftRepo,
     publishedProductByShop,
