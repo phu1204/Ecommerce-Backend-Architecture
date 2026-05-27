@@ -2,6 +2,10 @@
 
 const _ = require('lodash')
 
+const convertToObjectIdMongodb = (id) => {
+    return new mongoose.Types.ObjectId(id)
+}
+
 const getInfoData = ({ fileds = [], object = {} }) => {
     return _.pick( object, fileds )
 }
@@ -42,5 +46,6 @@ const updateNestedObjectPaser = obj =>{
 }
 
 module.exports = {
+    convertToObjectIdMongodb,
     getInfoData, getSelectData, unGetSelectData, removeUndefinedObject, updateNestedObjectPaser
 }
