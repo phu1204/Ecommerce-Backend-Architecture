@@ -19,7 +19,7 @@ class DiscountService {
         // Logic to generate a discount code based on the provided discountData
         // This may involve creating a new discount entry in the database and generating a unique code
         const {
-            code, start_date, end_date, is_active, shopId, min_order_value, product_ids, applies_to, name, description, type, value, max_value, max_uses, used_count, max_uses_per_user, shopId,
+            code, start_date, end_date, is_active, shopId, min_order_value, product_ids, applies_to, name, description, type, value, max_value, max_uses, used_count, max_uses_per_user,
         } = payload
 
         if(new Date(start_date) < new Date() || new Date(end_date) < new Date()) {
@@ -64,7 +64,7 @@ class DiscountService {
 
     /* Get all discount codes available with product */
     static async getAllDiscountCodes({ code, shopId, limit = 50, page = 1 }) {
-        const foundCode = await discount.findOne({ discount_code: code, discount_shopId: convertToObjectIdMongodb(shopId) }).lean()
+        const foundCode = await discount.findOne({discount_shopId: convertToObjectIdMongodb(shopId) }).lean()
 
         if(!foundCode || foundCode.discount_is_active == false) {
             throw new NotFoundError("Discount code not found")
@@ -93,6 +93,8 @@ class DiscountService {
                 select: ['product_name']
             }).lean()
         }
+
+        return products
     }
     //get all discount codes of shop
     static async getAllDiscountCodesByShop(limit, page, shopId) {
@@ -107,5 +109,5 @@ class DiscountService {
     }
 }
 
-
+module.exports = DiscountService
 

@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const KeyTokenService = require('./keyToken.services')
 const {createTokenPair, verifyJWT} = require('../auth/authUtils')
-const getIntoData = require('../utils')
+const {getInfoData} = require('../utils')
 const { BadRequestError, AuthFailureError, ForbiddenError } = require('../core/error.response.js')
 const findByEmail = require('./shop.services.js')
 
@@ -92,8 +92,10 @@ class AccessService {
             publicKey
         })
 
+        console.log(getInfoData)
+
         return {
-                    shop: getIntoData({ fileds: ['_id', 'name', 'email'], object: foundShop}),
+                    shop: getInfoData({ fileds: ['_id', 'name', 'email'], object: foundShop}),
                     tokens
                 }
 
@@ -149,7 +151,7 @@ class AccessService {
                 return {
                     code: 201,
                     metada: {
-                        shop: getIntoData({ fileds: ['_id', 'name', 'email'], object: newShop}),
+                        shop: getInfoData({ fileds: ['_id', 'name', 'email'], object: newShop}),
                         tokens
                     }
                 }
