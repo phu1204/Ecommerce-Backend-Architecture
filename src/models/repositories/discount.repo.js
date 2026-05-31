@@ -37,5 +37,16 @@ const updateDiscountById = async (code, userId, orderValue, productIds) => {
     },
     { new: true }
   ).lean();
-}  
+}
+
+const checkExists = async ({model, filter}) => {
+    return await model.findOne(filter).lean();
+}
+
+module.exports = {
+    findAllDiscountCodesUnselect,
+    findAllDiscountCodesSelect,
+    updateDiscountById,
+    checkExists
+}
 

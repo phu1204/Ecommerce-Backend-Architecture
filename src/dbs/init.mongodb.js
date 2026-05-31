@@ -15,7 +15,7 @@ class Database {
         if(1 === 1){
             mongoose.set('debug', true)
             mongoose.set('debug', {color: true})
-        }
+        }   
 
         mongoose.connect(connectString).then(_ => {
             maxPoolSize: 50;

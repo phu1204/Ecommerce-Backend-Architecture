@@ -20,7 +20,14 @@ const discountSchema = new Schema(
 
     discount_is_active: { type: Boolean, default: true }, // indicates whether the discount is currently active
     discount_applies_to: { type: String, required: true, enum: ['all', 'specific'] }, // specifies whether the discount applies to all products or specific products
-    discount_productIds: [{ type: Array, default: [] }], // an array of product IDs that the discount applies to (if discount_applies_to is 'specific')
+    discount_productIds: { 
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'Product'
+        }
+      ],
+      default: []}, // an array of product IDs that the discount applies to (if discount_applies_to is 'specific')
   },
   {
     collection: "Discounts",
