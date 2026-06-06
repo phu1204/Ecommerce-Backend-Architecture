@@ -4,7 +4,7 @@ const { model, Schema, mongoose } = require("mongoose");
 
 const cartSchema = new Schema(
     {
-        cart_userId: { type: Schema.Types.ObjectId, ref: 'User'},
+        cart_userId: { type: Number, require: true, default: 0},
         cart_state: { type: String, enum: ['active', 'inactive'], default: 'active'},
         cart_product_count: { type: Number, default: 0},
         cart_products: { type: Array, require: true, default: []},

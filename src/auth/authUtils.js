@@ -51,14 +51,13 @@ const authenticationV2 = asyncHandler( async (req, res, next) => {
     */
 
    const userId = req.headers[HEADER.CLIENT_ID]
-   if(!userId)  throw new AuthFailureError('Invalid Request')
+   if(!userId)  throw new AuthFailureError('Invalid Request',)
 
     const keyStore = await findByUserId(userId)
     if(!keyStore) throw new AuthFailureError('Not Found KeyStore')
         
     if(req.headers[HEADER.REFRESHTOKEN]){
         try {
-            console.log(req.headers[HEADER.REFRESHTOKEN])
             const refreshToken = req.headers[HEADER.REFRESHTOKEN]
             const decodeUser = JWT.verify(refreshToken, keyStore.privateKey)
             if(userId !== decodeUser.userId) throw new AuthFailureError('Invalid userId')
@@ -69,7 +68,7 @@ const authenticationV2 = asyncHandler( async (req, res, next) => {
         } catch (error) {
             throw error
         }
-    }
+    } throw new AuthFailureError('Not Found RefreshToken')
 })
 
 const authentication = asyncHandler( async (req, res, next) => {
