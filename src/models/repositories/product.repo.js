@@ -1,6 +1,7 @@
 const { Types } = require("mongoose")
 const { product, clothing, electronic, furniture } = require("../product.model")
 const { getSelectData, unGetSelectData, convertToObjectIdMongodb } = require("../../utils")
+const { NotFoundError } = require("../../core/error.response")
 
 const findAllDraftRepo = async({query, limit, skip}) => {
     return await queryProduct({query, limit, skip})
@@ -69,6 +70,19 @@ const updateProductById = async({product_id, bodyUpdate, model, isNew = true}) =
     })
 }
 
+const checkProductByServer = async(products) => {
+    return await Promise.all(products.map( async product => {
+        const foundProduct = await getProductById(product.productId)
+        if(!foundProduct) throw new NotFoundError('Product not exist in shop')
+            
+        return {
+            price: foundProduct.product_price,
+            quantity: product.quantity,
+            productId: foundProduct._id
+        }
+    }))
+}
+
 module.exports = {
     findAllDraftRepo,
     publishedProductByShop,
@@ -76,5 +90,6 @@ module.exports = {
     findAllProducts,
     findProduct,
     updateProductById,
-    getProductById
+    getProductById,
+    checkProductByServer
 }

@@ -11,7 +11,7 @@ router.post('/amount',asyncHandler(discountController.getDiscountAmount))
 router.get('/list_product_code',asyncHandler(discountController.getAllDiscountCodesWithProduct))
 
 //CHECK AUTH
-router.use(authenticationV2)
+// router.use(authenticationV2)
 router.post('', asyncHandler(discountController.createDiscount))
 router.get('',asyncHandler(discountController.getAllDiscountCodes))
 

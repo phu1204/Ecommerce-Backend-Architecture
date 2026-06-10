@@ -1,7 +1,7 @@
 'use strict'
 
 const { SuccessReponse } = require("../core/success.reponse")
-const DiscountService = require("../services/discount.servies")
+const DiscountService = require("../services/discount.services")
 
 class DiscountController {
     createDiscount = async (req, res, next) => {
@@ -36,4 +36,4 @@ class DiscountController {
     }
 }
 
-module.exports = new DiscountController()
+ module.exports = new DiscountController()

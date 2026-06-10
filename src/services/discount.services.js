@@ -1,6 +1,5 @@
 'use strict'
 
-const { getAllDiscountCodes } = require("../controllers/discount.controler");
 const { BadRequestError, NotFoundError } = require("../core/error.response");
 const { discount } = require("../models/discount.model");
 const { findAllDiscountCodesUnselect, checkExists } = require("../models/repositories/discount.repo");
@@ -69,8 +68,8 @@ class DiscountService {
     /* Get all discount codes available with product */
     static async getAllDiscountCodesWithProduct({ code, shopId, limit = 50, page = 1 }) {
 
+        console.log(code)
         const foundCode = await discount.findOne({discount_code: code ,discount_shopId: convertToObjectIdMongodb(shopId) }).lean()
-        
         if(!foundCode || foundCode.discount_is_active == false) {
             throw new NotFoundError("Discount code not found")
         }
@@ -138,7 +137,7 @@ class DiscountService {
         let totalOrder = 0
         if(discount_min_order_value > 0){
             //get total
-            totalOrder = products.reduce((acc, product) => acc + product.product_price * product.product_quantity, 0)
+            totalOrder = products.reduce((acc, product) => acc + (product.price * product.quantity), 0)
             
             if(totalOrder < discount_min_order_value) {
                 throw new BadRequestError(`Minimum order value for this discount code is ${discount_min_order_value}`);
@@ -155,7 +154,6 @@ class DiscountService {
 
         // Check discount type is fixed amount or percentage
         const discountAmount = foundDiscount.discount_type === 'fixed_amount' ? foundDiscount.discount_value : totalOrder * (foundDiscount.discount_value / 100)
-
         return {
             totalOrder,
             discountAmount,

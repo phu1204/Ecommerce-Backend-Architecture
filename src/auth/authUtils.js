@@ -9,7 +9,8 @@ const findByEmail = require("../services/shop.services")
 const HEADER = {
     API_KEY: 'x-api-key',
     CLIENT_ID: 'x-client-id',
-    REFRESHTOKEN: 'x-rtoken-id'      
+    REFRESHTOKEN: 'x-rtoken-id',
+    AUTHORIZATION: 'authorization'      
 }
 
 const createTokenPair = async (payload, publicKey, privateKey) => {
@@ -54,8 +55,9 @@ const authenticationV2 = asyncHandler( async (req, res, next) => {
    if(!userId)  throw new AuthFailureError('Invalid Request',)
 
     const keyStore = await findByUserId(userId)
+    console.log(keyStore)
     if(!keyStore) throw new AuthFailureError('Not Found KeyStore')
-        
+      
     if(req.headers[HEADER.REFRESHTOKEN]){
         try {
             const refreshToken = req.headers[HEADER.REFRESHTOKEN]
@@ -66,9 +68,23 @@ const authenticationV2 = asyncHandler( async (req, res, next) => {
             req.refreshToken = refreshToken
             return next()
         } catch (error) {
+            console.log(error)
             throw error
         }
-    } throw new AuthFailureError('Not Found RefreshToken')
+    } else if(req.headers[HEADER.AUTHORIZATION]){
+        try {
+            const accessToken = req.headers[HEADER.AUTHORIZATION]
+            console.log(accessToken)
+            const decodeUser = verifyJWT(accessToken, keyStore.publicKey)
+            console.log(decodeUser)
+            if(userId !== decodeUser.userId || !decodeUser ) throw new AuthFailureError('Invalid userId, please login again')
+            req.keyStore = keyStore
+            req.user = decodeUser
+            return next()
+        } catch (error) {
+            throw error
+        }
+    } throw new AuthFailureError('Invalid userId, please login again1')
 })
 
 const authentication = asyncHandler( async (req, res, next) => {
@@ -99,8 +115,8 @@ const authentication = asyncHandler( async (req, res, next) => {
     }
 })
 
-const verifyJWT = async (token, keySecret) => {
-    return await JWT.verify(token, keySecret)
+const verifyJWT = (token, keySecret) => {
+    return JWT.verify(token, keySecret)
 }
 
 module.exports = {

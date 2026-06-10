@@ -92,7 +92,6 @@ class AccessService {
             publicKey
         })
 
-        console.log(getInfoData)
 
         return {
                     shop: getInfoData({ fileds: ['_id', 'name', 'email'], object: foundShop}),

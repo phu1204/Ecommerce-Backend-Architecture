@@ -80,7 +80,7 @@ class CartService {
         const { productId, quantity, old_quantity } = shop_order_ids[0]?.item_products[0]
         //check cart exists
         const foundProduct = await getProductById(productId)
-        if(!foundProduct)throw new NotFoundError('Not Found This Product')
+        if(!foundProduct) throw new NotFoundError('Not Found This Product')
 
         //check shop
         if(foundProduct.product_shop.toString() !== shop_order_ids[0]?.shopId) throw new NotFoundError('Not belongs to the shop')
@@ -112,7 +112,7 @@ class CartService {
         return await cart.updateOne(query, updateSet)
     }
 
-    static async getListCart({ userId }){
+    static async getListCart({userId}){
         return await cart.findOne({
             cart_userId: +userId
         }).lean()
