@@ -1,8 +1,12 @@
 'use strict'
 
+const { BadRequestError } = require("../core/error.response")
+const cart = require("../models/cart.model")
+const order = require("../models/order.model")
 const findCartById = require("../models/repositories/cart.repo")
 const { checkProductByServer } = require("../models/repositories/product.repo")
 const { getDiscountAmount } = require("./discount.services")
+const { acquireLock, releaseLock } = require("./redis.services")
 
 /*
         {
@@ -120,6 +124,58 @@ class CheckoutService {
             check_order
         }
     }
+
+    static async orderByUser ({
+        shop_order_ids,
+        cartId,
+        userId,
+        user_address={},
+        user_payment={},
+    }) {
+        const { shop_order_ids_new, check_order } = await CheckoutService.checkoutReview({userId, cartId, shop_order_ids})
+        const products = shop_order_ids_new.flatMap(order => order.item_products)
+        const acquireProduct = []
+        for (let i = 0; i < products.length; i++) {
+            const { productId, cartId, quantity } = products[i];
+            const keyLock = await acquireLock(productId, cartId, quantity)
+            acquireProduct.push(keyLock ? true : false)
+            if(keyLock){
+                await releaseLock(keyLock)
+            }
+        }
+        
+        if(acquireProduct.includes(false)){
+            throw new BadRequestError('Out of Stock, pls check product again')
+        }
+
+        const newOrder = await order.create({
+            order_userId: order_userId,
+            order_checkout: order_checkout,
+            order_shippingAddress: order_shippingAddress,
+            order_status: order_status,
+            order_products: order_products,
+            order_paymentStatus: order_paymentStatus,
+            order_paymentMethod: order_paymentMethod,
+            order_trackingNumber: order_trackingNumber,
+        })
+
+        // if order create have to delete cart
+        if(newOrder){
+            return await cart.deleteOne({_id: cartId})
+        }
+    }
+
+    //Query Orders [User]
+    static async getOrderByUser(){}
+
+    //Query a order by User[User]
+    static async getOneOrderByUser(){}
+
+    //Cancel Order[User]
+    static async cancelOrderByUser(){}
+
+    //Update Order[User]
+    static async updateOrderStatusByShop(){}
 }
 
 module.exports = CheckoutService
