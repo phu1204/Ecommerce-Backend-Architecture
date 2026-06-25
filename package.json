@@ -21,6 +21,7 @@
     "lodash": "^4.17.21",
     "mongodb": "^7.1.0",
     "mongoose": "^8.15.0",
+    "redis": "^6.0.0",
     "slugify": "^1.6.9"
   },
   "devDependencies": {
